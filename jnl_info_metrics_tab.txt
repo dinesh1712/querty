@@ -1,0 +1,203 @@
+{# Article Information data #}
+<div class="panel-display">
+  <div class="article-info-secction">
+    <div class="article-info-title">
+      <h2>{{ article_info.section_heading }}</h2>
+      <div class="panel-separator"></div>
+      <div class="panel-pane pane-custom pane-5">
+        <div class="pane-content">
+          {# Volume number in article information section #}
+          {% if article_info.volume %}
+          <span class="highwire-cite-metadata-volume">
+            vol. {{ article_info.volume }}
+          </span>
+          {% endif %}
+          {# issue number in article information section #}
+          {% if article_info.issue %}
+          <span class="highwire-cite-metadata-issue">
+            no. {{ article_info.issue }}
+          </span>
+          {% endif %}
+          {# page number in article information section #}
+          {% if article_info.elocation_id_or_page_id %}
+          <span class="highwire-cite-metadata-page">
+            {{ article_info.elocation_id_or_page_id }}
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="article-info-data">
+      {# DOI number in article information section #}
+      {% if article_info.journal_doi %}
+      {% include "@molecules/content/article-information.twig" with {
+      label : 'DOI',
+      url : article_info.doi_link,
+      text : article_info.doi_link,
+      } only %}
+      {% endif %}
+      {# Pubmed number in article information section #}
+      {% if article_info.pubmed_id %}
+      {% include "@molecules/content/article-information.twig" with {
+      label : 'PubMed',
+      url : article_info.pubmed_url,
+      text : article_info.pubmed_id,
+      } only %}
+      {% endif %}
+      {% if article_info.publisher_name %}
+      {# Print ISSN number in article information section #}
+      {% include "@molecules/content/article-information.twig" with {
+      label : 'Published By',
+      url : article_info.publisher_url,
+      text : article_info.publisher_name,
+      } only %}
+      {% endif %}
+      {% if article_info.pissn %}
+      {# Print ISSN number in article information section #}
+      {% include "@molecules/content/article-information.twig" with {
+      label : 'Print ISSN',
+      url : article_info.pissn_url,
+      text : article_info.pissn,
+      } only %}
+      {% endif %}
+      {% if article_info.eissn %}
+      {# Online ISSN number in article information section #}
+      {% include "@molecules/content/article-information.twig" with {
+      label : 'Online ISSN',
+      url : article_info.eissn_url,
+      text : article_info.eissn,
+      } only %}
+      {% endif %}
+      {% if article_info.date_markup %}
+      {# History number in article information section #}
+      <div class="panel-pane pane-highwire-publication-history">
+        <div class="pane-content">
+          <div class="field field-name-field-highwire-publication-history field-type-text field-label-inline clearfix">
+            <div class="field-label">History&nbsp;</div>
+            <div class="field-items">
+              <div class="field-item even">
+                <ul class="publication-history">
+                  {% if article_info.date_received %}
+                    <li>
+                      {{ article_info.label_received }} {{ article_info.date_received|date('F j, Y') }}
+                    </li>
+                  {% endif %}
+                  {% if article_info.date_revision %}
+                    <li>
+                      Revision received {{ article_info.date_revision|date('F j, Y') }}
+                    </li>
+                  {% endif %}
+                  {% if article_info.date_accepted %}
+                    <li>
+                      {{ article_info.label_accepted }} {{ article_info.date_accepted|date('F j, Y') }}
+                    </li>
+                  {% endif %}
+                  {{ article_info.date_markup|raw }}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-separator"></div>
+      {% endif %}
+
+      {% if article_version_data.url_check == TRUE and article_version_data.latest_article is not null %}
+      {# Article version in article information section #}
+      {% if article_version_data.version_heading %}
+      <div class="panel-pane pane-highwire-versions">
+        <h2 class="pane-title">{{ article_version_data.version_heading}}</h2>
+        <div class="pane-content">
+          <div class="hw-versions" id="highwire-versions-wrapper">
+            <div class="item-list">
+              <ul class="issue-toc-list">
+                {% set date_format = article_version_data.version_date_format %}
+                  {% set formatted_date = article_version_data.version_date|date(date_format) %}
+                {{ 'You are currently viewing a Latest version of this article' }}(
+                {% if article_version_data.version_date_format %}
+                  {{ formatted_date }}
+                  {% else %}
+                  {{ article_version_data.version_date|date(' F j, Y - H:i ') }}
+                  {% endif %}).
+                <br />
+                <a href="{{ article_version_data.latest_article }}" class="hw-version-previous-link" title = "View the most current version of this article">
+                  {{ 'View the most recent version of this article' }}
+                </a>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endif %}
+
+      {% if article_version_data.url_check == false and article_version_data.latest_article is not null %}
+  {% if article_version_data.version_heading %}
+    <div class="panel-pane pane-highwire-versions">
+      <h2 class="pane-title">{{ article_version_data.version_heading }}</h2>
+      <div class="pane-content">
+        <div class="hw-versions" id="highwire-versions-wrapper">
+          <div class="item-list">
+            <ul class="issue-toc-list">
+              
+              {% set date_format = article_version_data.version_date_format %}
+
+                {% for item in article_version_data.latest_article %}
+                {% if date_format %}
+                  {% set formatted_date = item.date|date(date_format) %}
+                {% else %}
+                  {% set formatted_date = item.date|date('F j, Y - H:i') %}
+                {% endif %}
+
+                <div class="hw-version-previous-link">
+                  <a href="{{ item.url }}" title="{{ article_version_data.version_title }} posted on {{ formatted_date }}">
+                    {{ article_version_data.version_title }} ({{ formatted_date }}).
+                  </a><br />
+                  {{ article_version_data.version_description }}
+                </div>
+                {% endfor %}
+
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+
+
+      {% if article_info.copyright_info %}
+      <div class="panel-pane pane-highwire-copyright">
+        <div class="pane-content">
+          <div class="field field-name-field-highwire-copyright field-type-text field-label-inline clearfix">
+            <div class="field-label">Copyright &amp; Usage&nbsp;</div>
+            <div class="field-items">
+              <div class="field-item even">
+                <span class="nlm-copyright-statement" data-hwp-id="copyright-statement-1">
+                  {{ article_info.copyright_info|raw }}
+                </span>
+                <span class="nlm-license">
+                  <span class="nlm-p">
+                    {% if article_info.license_info %}
+                    {{ article_info.license_info|raw }}
+                    {% endif %}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-separator"></div>
+      {% endif %}
+    </div>
+  </div>
+  <hr class="solid">
+  <div class="author-info-section">
+    <div class="author-info-title">
+      <h2>Author Information</h2>
+    </div>
+  </div>
+</div>

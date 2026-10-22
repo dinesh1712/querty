@@ -1,0 +1,17 @@
+1) Single code, single database, single jcode (like navi)
+2) Single code, single database, multiple jcodes (like pmr)
+3) Single code, different database, multiple jcodes, Modification per jcode in theme and modules (similar to uwp)
+
+
+
+
+
+create citiation module. in module create one settings form for TOC settings. multiple checkbox
+
+
+highwire core
+highwire_kafka
+highwire_client
+highwire_hwphp
+highwire_content
+

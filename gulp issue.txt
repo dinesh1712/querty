@@ -1,0 +1,105 @@
+Connecting to fa-jcore-web-dev-04.highwire.org...
+sh-4.4$ npm install -f --unsafe-perm=true --allow-root --no-optional && npm run build:drupal && gulp 
+npm WARN using --force I sure hope you know what you are doing.
+
+> jcorex-one-theme@1.0.0 postinstall /opt/sites/scolaris-wplbr_jcorex_890/site-repo/releases/20250331124850/web/modules/freebird/themes/highwire/jcorex_one_theme
+> cd tools/generators/new-component && npm link
+
+npm WARN using --force I sure hope you know what you are doing.
+npm ERR! code EACCES
+npm ERR! syscall unlink
+npm ERR! path /usr/lib/node_modules/generator-new-component
+npm ERR! errno -13
+npm ERR! Error: EACCES: permission denied, unlink '/usr/lib/node_modules/generator-new-component'
+npm ERR!  [Error: EACCES: permission denied, unlink '/usr/lib/node_modules/generator-new-component'] {
+npm ERR!   errno: -13,
+npm ERR!   code: 'EACCES',
+npm ERR!   syscall: 'unlink',
+npm ERR!   path: '/usr/lib/node_modules/generator-new-component'
+npm ERR! }
+npm ERR! 
+npm ERR! The operation was rejected by your operating system.
+npm ERR! It is likely you do not have the permissions to access this file as the current user
+npm ERR! 
+npm ERR! If you believe this might be a permissions issue, please double-check the
+npm ERR! permissions of the file and its containing directories, or try running
+npm ERR! the command again as root/Administrator.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/bdkumar/.npm/_logs/2025-04-01T10_17_36_859Z-debug.log
+npm WARN @hypnosphi/create-react-context@0.3.1 requires a peer of react@>=0.14.0 but none is installed. You must install peer dependencies yourself.
+npm WARN @reach/visually-hidden@0.1.4 requires a peer of react@^16.8.0 but none is installed. You must install peer dependencies yourself.
+npm WARN @skatejs/renderer-lit-html@0.2.2 requires a peer of lit-html@^0.11.0-dev.1 but none is installed. You must install peer dependencies yourself.
+npm WARN @yeoman/adapter@1.4.0 requires a peer of @yeoman/types@^1.1.0 but none is installed. You must install peer dependencies yourself.
+npm WARN @yeoman/conflicter@2.0.0 requires a peer of @yeoman/types@^1.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN @yeoman/conflicter@2.0.0 requires a peer of mem-fs@^4.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN eslint-plugin-vue@6.2.2 requires a peer of eslint@^5.0.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN jest-vue-preprocessor@1.7.1 requires a peer of typescript@* but none is installed. You must install peer dependencies yourself.
+npm WARN melody-extension-core@1.7.5 requires a peer of melody-idom@^1.1.0 but none is installed. You must install peer dependencies yourself.
+npm WARN melody-extension-core@1.7.5 requires a peer of melody-runtime@^1.1.0 but none is installed. You must install peer dependencies yourself.
+npm WARN mem-fs-editor@11.0.0 requires a peer of mem-fs@^4.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN no-emit-webpack-plugin@1.0.0 requires a peer of webpack@^3.1.0 but none is installed. You must install peer dependencies yourself.
+npm WARN react-autosuggest@9.4.3 requires a peer of react@>=0.14.7 but none is installed. You must install peer dependencies yourself.
+npm WARN react-autowhatever@10.2.1 requires a peer of react@>=0.14.7 but none is installed. You must install peer dependencies yourself.
+npm WARN react-dom@16.14.0 requires a peer of react@^16.14.0 but none is installed. You must install peer dependencies yourself.
+npm WARN react-html-parser@2.0.2 requires a peer of react@^0.14.0 || ^15.0.0 || ^16.0.0-0 but none is installed. You must install peer dependencies yourself.
+npm WARN react-popper@1.3.11 requires a peer of react@0.14.x || ^15.0.0 || ^16.0.0 || ^17.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN react-popper-tooltip@2.11.1 requires a peer of react@^16.6.0 but none is installed. You must install peer dependencies yourself.
+npm WARN redux-thunk@2.4.2 requires a peer of redux@^4 but none is installed. You must install peer dependencies yourself.
+npm WARN ts-loader@6.2.2 requires a peer of typescript@* but none is installed. You must install peer dependencies yourself.
+npm WARN tsutils@3.21.0 requires a peer of typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta but none is installed. You must install peer dependencies yourself.
+npm WARN update-browserslist-db@1.0.11 requires a peer of browserslist@>= 4.21.0 but none is installed. You must install peer dependencies yourself.
+npm WARN yeoman-environment@4.1.3 requires a peer of @yeoman/types@^1.1.1 but none is installed. You must install peer dependencies yourself.
+npm WARN yeoman-environment@4.1.3 requires a peer of mem-fs@^4.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN jcorex-one-theme@1.0.0 No repository field.
+
+audited 4250 packages in 26.542s
+
+269 packages are looking for funding
+  run `npm fund` for details
+
+found 615 vulnerabilities (57 low, 192 moderate, 316 high, 50 critical)
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> jcorex-one-theme@1.0.0 build:drupal /opt/sites/scolaris-wplbr_jcorex_890/site-repo/releases/20250331124850/web/modules/freebird/themes/highwire/jcorex_one_theme
+> cross-env-shell NODE_ENV=production "webpack --hide-modules --config ./apps/drupal-default/webpack.config.js"
+
+dist /opt/sites/scolaris-wplbr_jcorex_890/site-repo/releases/20250331124850/web/modules/freebird/themes/highwire/jcorex_one_theme/dist/
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+Hash: 6857954fbc3dce78cffd
+Version: webpack 4.46.0
+Time: 6978ms
+Built at: 04/01/2025 6:17:52 AM
+                       Asset      Size  Chunks                   Chunk Names
+                      app.js   126 KiB       0  [emitted]        app
+                  app.js.map   669 KiB       0  [emitted] [dev]  app
+            drupal-jquery.js  89.4 KiB       1  [emitted]        drupal-jquery
+drupal-jquery.js.LICENSE.txt  89 bytes          [emitted]        
+        drupal-jquery.js.map   218 KiB       1  [emitted] [dev]  drupal-jquery
+[06:17:53] Using gulpfile /opt/sites/scolaris-wplbr_jcorex_890/site-repo/releases/20250331124850/web/modules/freebird/themes/highwire/jcorex_one_theme/gulpfile.js
+[06:17:53] Starting 'default'...
+[06:17:53] Starting 'build:sass'...
+Error in plugin "sass"
+Message:
+    source/default/_patterns/03-components/header/_header.scss
+Error: Undefined variable.
+  ╷
+8 │     background-color: $header_bar_border;
+  │                       ^^^^^^^^^^^^^^^^^^
+  ╵
+  source/default/_patterns/03-components/header/_header.scss 8:23  @import
+  source/default/_patterns/03-components/_components.scss 17:9     @import
+  source/default/css/style.scss 133:9                              root stylesheet
+[06:17:56] Finished 'build:sass' after 2.61 s
+[06:17:56] Starting 'build:pluginjs'...
+[06:17:58] Finished 'build:pluginjs' after 2.29 s
+[06:17:58] Starting 'build:customjs'...
+[06:18:00] Finished 'build:customjs' after 1.82 s
+[06:18:00] Starting 'build:fonts'...
+[06:18:00] Finished 'build:fonts' after 66 ms
+[06:18:00] Starting 'build:images'...
+[06:18:00] Finished 'build:images' after 87 ms
+[06:18:00] Finished 'default' after 6.88 s
+sh-4.4$ 

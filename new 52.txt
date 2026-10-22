@@ -1,0 +1,458 @@
+use Drupal\node\NodeInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Drupal\file\Entity\File;
+
+function jcorex_one_preprocess_node(array &$variables) {
+
+  // Default
+  $variables['display_submitted'] = FALSE;
+
+  // ✅ FIX: Use node from variables (NOT routeMatch)
+  if (empty($variables['node']) || !$variables['node'] instanceof NodeInterface) {
+    return;
+  }
+
+  $node = $variables['node'];
+  $typeName = $node->bundle();
+  $variables['content_type'] = $typeName;
+
+  // =====================================================
+  // EXISTING JOURNAL ARTICLE LOGIC (UNCHANGED)
+  // =====================================================
+  if ($typeName == 'journal_article') {
+
+    $nid = $node->id();
+    $options = ['absolute' => TRUE];
+
+    $url_object = Url::fromRoute('entity.node.canonical', ['node' => $nid], $options);
+    $article_url = $url_object->toString();
+
+    $parent_journal = $node->get('parent_journal')->getValue();
+    $parent_issue = $node->get('parent_issue')->getValue();
+    $parent_issue_nid = $parent_issue[0]['target_id'] ?? NULL;
+
+    $parent_issue_url = NULL;
+
+    if (!empty($parent_issue_nid)) {
+      $issue_node = Node::load($parent_issue_nid);
+      $url_object = Url::fromRoute('entity.node.canonical', ['node' => $parent_issue_nid], $options);
+      $parent_issue_url = $url_object->toString();
+    }
+
+    $parent_journal_nid = $parent_journal[0]['target_id'] ?? NULL;
+
+    $issue = !$node->get('issue')->isEmpty() ? $node->get('issue')->value : '';
+    $volume = !$node->get('volume')->isEmpty() ? $node->get('volume')->value : '';
+
+    $cover_image = NULL;
+    $num_of_children = 0;
+
+    if (!empty($parent_journal_nid)) {
+
+      $journal_node = Node::load($parent_journal_nid);
+
+      if ($journal_node && $journal_node->hasField('children') && !$journal_node->get('children')->isEmpty()) {
+        $children = $journal_node->get('children')->getValue();
+        $num_of_children = count($children);
+      }
+
+      $url_object = Url::fromRoute('entity.node.canonical', ['node' => $parent_journal_nid], $options);
+
+      $nid_journal_info = \Drupal::entityQuery('node')
+        ->accessCheck(FALSE)
+        ->condition('type', 'journal_info')
+        ->condition('field_journal', $parent_journal_nid)
+        ->execute();
+
+      foreach ($nid_journal_info as $nid) {
+        $info_node = Node::load($nid);
+        if ($info_node && !$info_node->get('field_journal_cover_image')->isEmpty()) {
+          $file = File::load($info_node->get('field_journal_cover_image')->target_id);
+          if ($file) {
+            $cover_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
+        }
+      }
+    }
+
+    $vol_issue = ($num_of_children == 1) ? "Issue $issue" : "Vol $volume Issue $issue";
+
+    $variables['periodical_items'] = [
+      'periodical_url' => $url_object->toString(),
+      'cover_img' => $cover_image,
+      'title' => html_entity_decode($node->getTitle()),
+      'article_url' => $parent_issue_url,
+      'vol_issue' => $vol_issue,
+    ];
+  }
+
+  // =====================================================
+  // ✅ NEW: BRIGHTCOVE VIDEO SUPPORT
+  // =====================================================
+  if ($typeName === 'advance_page') {
+
+    if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+
+      $body = $node->get('body')->value;
+
+      // Find all <video-js> tags (based on your HTML)
+      preg_match_all('/<video-js[^>]*>/i', $body, $matches);
+
+      if (!empty($matches[0])) {
+
+        $loaded = [];
+
+        foreach ($matches[0] as $tag) {
+
+          preg_match('/data-account="(\d+)"/', $tag, $account_match);
+          preg_match('/data-player="([^"]+)"/', $tag, $player_match);
+
+          if (!empty($account_match[1]) && !empty($player_match[1])) {
+
+            $account = $account_match[1];
+            $player = $player_match[1];
+
+            $key = $account . '_' . $player;
+
+            if (!isset($loaded[$key])) {
+
+              $script_url = "https://players.brightcove.net/{$account}/{$player}_default/index.min.js";
+
+              // Attach script
+              $variables['#attached']['html_head'][] = [
+                [
+                  '#tag' => 'script',
+                  '#attributes' => [
+                    'src' => $script_url,
+                  ],
+                ],
+                'brightcove_' . $key,
+              ];
+
+              $loaded[$key] = TRUE;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+if ($node instanceof \Drupal\node\NodeInterface && $node->bundle() === 'advanced_page') {
+    if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+
+      $body = $node->get('body')->value;
+
+      // Find all <video-js> tags
+      preg_match_all('/<video-js[^>]*>/i', $body, $matches);
+
+      if (!empty($matches[0])) {
+
+        $added = [];
+
+        foreach ($matches[0] as $tag) {
+
+          preg_match('/data-account="(\d+)"/', $tag, $account_match);
+          preg_match('/data-player="([^"]+)"/', $tag, $player_match);
+
+          if (!empty($account_match[1]) && !empty($player_match[1])) {
+
+            $account = $account_match[1];
+            $player = $player_match[1];
+
+            $key = $account . '_' . $player;
+
+            if (!isset($added[$key])) {
+
+              $script_url = "//players.brightcove.net/{$account}/{$player}_default/index.min.js";
+
+              // Attache the Brightcove script to the page header
+              $variables['#attached']['html_head'][] = [
+              [
+                '#tag' => 'script',
+                '#attributes' => [
+                  'src' => $script_url,
+                  'defer' => TRUE,
+                ],
+              ],
+              'brightcove_' . $key,
+            ];
+
+              $added[$key] = TRUE;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  
+  
+  
+  
+  <?php
+
+namespace Drupal\highwire_markup\Plugin\HWMarkup\Processor;
+
+use Drupal\highwire_markup\ProcessorBase;
+use HighWire\Parser\Markup\Markup;
+
+/**
+ * Brightcove Video Processor.
+ *
+ * @Processor(
+ *   id = "brightcove_video",
+ *   name = "Brightcove Video",
+ *   description = "Process Brightcove video markup"
+ * )
+ */
+class BrightcoveVideo extends ProcessorBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function process(Markup $markup, &$context = NULL) {
+
+    $config = $this->getConfig();
+
+    $account = $config['account'] ?? '';
+    $player  = $config['playerid'] ?? 'default';
+
+    // Find all object tags inside play-in-place.
+    $objects = $markup->xpath('//object[contains(@class, "play-in-place")]');
+
+    if (empty($objects)) {
+      return;
+    }
+
+    $replaced = FALSE;
+
+    foreach ($objects as $object) {
+
+      $video_ref = '';
+
+      // Try getting ID from 'data' attribute first, then 'id'.
+      if ($object->hasAttribute('data')) {
+        $video_ref = $object->getAttribute('data');
+      }
+
+      if (empty($video_ref) && $object->hasAttribute('id')) {
+        $video_ref = $object->getAttribute('id');
+      }
+
+      if (empty($video_ref)) {
+        continue;
+      }
+
+      // Create <video-js> element.
+      $video = $markup->createElement('video-js');
+
+      $video->setAttribute('class', 'video-js');
+      $video->setAttribute('controls', 'true');
+      $video->setAttribute('data-video-id', $video_ref);
+      $video->setAttribute('data-account', $account);
+      $video->setAttribute('data-player', $player);
+      $video->setAttribute('data-embed', 'default');
+      $video->setAttribute('width', '640');
+      $video->setAttribute('height', '360');
+
+      // Replace object with video-js element.
+      $object->parentNode->replaceChild($video, $object);
+      $replaced = TRUE;
+    }
+
+    // Attach Brightcove player script via Drupal's #attached mechanism.
+    if ($replaced && !empty($account) && !empty($player)) {
+
+      $script_url = "https://players.brightcove.net/{$account}/{$player}_default/index.min.js";
+
+      $attachment = [
+        [
+          '#tag' => 'script',
+          '#attributes' => [
+            'src' => $script_url,
+            'defer' => TRUE,
+          ],
+        ],
+        'brightcove_' . $account . '_' . $player,
+      ];
+
+      if (is_array($context)) {
+        // $context is a render array — attach directly.
+        $context['#attached']['html_head'][] = $attachment;
+      }
+      else {
+        // $context is a Node entity or other object.
+        // Inject the script tag directly into the markup <head> as a fallback.
+        $script_element = $markup->createElement('script');
+        $script_element->setAttribute('src', $script_url);
+        $script_element->setAttribute('defer', 'defer');
+
+        // Append to <head> if it exists, otherwise append to root.
+        $head_elements = $markup->xpath('//head');
+        if (!empty($head_elements)) {
+          $head_elements[0]->appendChild($script_element);
+        }
+        else {
+          $markup->documentElement->appendChild($script_element);
+        }
+      }
+    }
+  }
+
+  /**
+   * Config form.
+   */
+  public function configForm(array $config = NULL) {
+    $config = $this->getConfig();
+
+    return [
+      'account' => [
+        '#type' => 'textfield',
+        '#title' => 'Account ID',
+        '#default_value' => $config['account'] ?? '',
+      ],
+      'playerid' => [
+        '#type' => 'textfield',
+        '#title' => 'Player ID',
+        '#default_value' => $config['playerid'] ?? 'default',
+      ],
+    ];
+  }
+
+}
+
+
+function jcorex_one_preprocess_node(array &$variables) {
+
+  if (!empty($variables['#attached']['drupalSettings']['brightcove'])) {
+
+    $account = $variables['#attached']['drupalSettings']['brightcove']['account'];
+    $player  = $variables['#attached']['drupalSettings']['brightcove']['player'];
+
+    if (!empty($account) && !empty($player)) {
+
+      $script_url = "https://players.brightcove.net/{$account}/{$player}_default/index.min.js";
+
+      $variables['#attached']['html_head'][] = [
+        [
+          '#tag' => 'script',
+          '#attributes' => [
+            'src' => $script_url,
+            'defer' => TRUE,
+          ],
+        ],
+        'brightcove_' . $account . '_' . $player,
+      ];
+    }
+  }
+}
+
+function YOURMODULE_preprocess_node(&$variables) {
+
+  $node = $variables['node'];
+
+  // Check if node has Brightcove video
+  if (!empty($variables['content']['body'][0]['#text'])) {
+
+    if (str_contains($variables['content']['body'][0]['#text'], 'video-js')) {
+
+      // Get config
+      $config = \Drupal::config('highwire_markup.processor.brightcove_video');
+      $account = $config->get('account');
+      $player  = $config->get('playerid');
+
+      if (!empty($account) && !empty($player)) {
+
+        $script_url = "https://players.brightcove.net/{$account}/{$player}_default/index.min.js";
+
+        $variables['#attached']['html_head'][] = [
+          [
+            '#tag' => 'script',
+            '#attributes' => [
+              'src' => $script_url,
+              'defer' => TRUE,
+            ],
+          ],
+          'brightcove_dynamic',
+        ];
+      }
+    }
+  }
+}
+
+
+After AC3 toggle.
+
+checkbox for toc
+	1. Open Icon on TOC and serach.
+	2. Free Icon on TOC.
+	
+Checkbox for Articles.
+
+	1. Open Icon on Article.
+	2. Free Icon on Article.
+	
+	
+	
+	
+	
+Access Enigineering fixes:
+
+Top 500 Errors List as per my analysis 
+500 errors for http://accessengineeringlibrary.com 
+1- Search: /search?implicit-login=true&sigma-token=xWznPvqnJrfzVMlYIPjajFWOIdfTFO30lBaeWKkXPkE&items_per_page=25&scope=selection&f%5B0%5D=author%3ABarry%20Tillman&f%5B1%5D=author%3ARonald%20K.%20Jurgen&f%5B2%5D=content_type%3ABooks -P4 (DONE)
+2- Focus view: /highwire_display/entity_view/node/*/focus_view -P3 (Done)
+3- /highwire_access_control/access_icons P3 (need to discuss)
+4- Lookup: /mhe-lookup/toc-chapter-first-section/* -P2 (Done)
+5- Lookup: /index.php/mhe-lookup/toc-chapter-first-section/12984055 -P2 (Done)
+6- Chapter accessing: /content/book/*/toc-chapter/chapter14/section/section2  -P1 (need to discuss)
+
+
+31/03/26 - report
+7.500 /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd
+7d3a65/alienvault-ossim-implementation.pdf
+8. 
+
+
+
+
+
+/mheaeworks/book/9780071701099/chapter/chapter8.atom
+
+/content/book/9780071701099/toc-chapter/chapter/chapter8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+see the latest log [31/Mar/2026:01:40:59 -0400] "GET /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd7d3a65/alienvault-ossim-implementation.pdf HTTP/1.1" 500 61 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" "actea7f30oXseNiTmDbTegAAANY" 628583
+scolaris-mheae-d10-stage-green-test.auto-drupal-stage-varnish02.highwire.org "61.246.62.186" "mheaeworks" - - [01/Apr/2026:01:49:03 -0400] "GET /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd7d3a65/alienvault-ossim-implementation.pdf HTTP/1.1" 500 16876 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" "acyxz84qi7xHZJ@i1r3evwAAAAY" 591057
+scolaris-mheae-d10-stage-green-test.auto-drupal-stage-varnish02.highwire.org "61.246.62.186" "mheaeworks" - - [01/Apr/2026:01:49:06 -0400] "GET /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd7d3a65/alienvault-ossim-implementation.pdf HTTP/1.1" 500 16876 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" "acyx0vgOFTR0kAB@HaEUUQAAANI" 434614
+scolaris-mheae-d10-stage-green-test.auto-drupal-stage-varnish02.highwire.org "61.246.62.186" "mheaeworks" - - [01/Apr/2026:01:49:44 -0400] "GET /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd7d3a65/alienvault-ossim-implementation.pdf HTTP/1.1" 500 61 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" "acyx@EZX8rZXvs3CtkT@HQAAAE8" 708775
+scolaris-mheae-d10-stage-green-test.auto-drupal-stage-varnish02.highwire.org "61.246.62.186" "mheaeworks" - - [01/Apr/2026:01:52:01 -0400] "GET /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd7d3a65/alienvault-ossim-implementation.pdf HTTP/1.1" 500 61 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" "acyygfgOFTR0kAB@HaEUpgAAAMo" 692027
+scolaris-mheae-d10-stage-green-test.auto-drupal-stage-varnish02.highwire.org "61.246.62.186" "mheaeworks" - - [01/Apr/2026:01:54:33 -0400] "GET /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd7d3a65/alienvault-ossim-implementation.pdf HTTP/1.1" 500 61 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" "acyzGfgOFTR0kAB@HaEUuAAAANM" 635306
+scolaris-mheae-d10-stage-green-test.auto-drupal-stage-varnish02.highwire.org "61.246.62.186" "mheaeworks" - - [01/Apr/2026:03:06:24 -0400] "GET /binary/mheaeworks/94fac7eff561f52d/43aec3f5b343ced78437763c64df7272236cd485c52ddbf0ddfcf02afd7d3a65/alienvault-ossim-implementation.pdf HTTP/1.1" 500 61 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" "aczD8EZX8rZXvs3CtkQGOAAAAFE" 767708
+
+
+
+$url = Url::fromRoute('<front>')->toString();
+      return new RedirectResponse('/404');
+	  
+	  
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;

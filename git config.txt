@@ -1,0 +1,45 @@
+ git config --list
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=git@github.com:highwire/freebird.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.8.x-1.x-stable.remote=origin
+branch.8.x-1.x-stable.merge=refs/heads/8.x-1.x-stable
+remote.composer.url=git@github.com:highwire/freebird.git
+remote.composer.fetch=+refs/heads/*:refs/remotes/composer/*
+branch.10.x-1.x-stable.remote=origin
+branch.10.x-1.x-stable.merge=refs/heads/10.x-1.x-stable
+
+[1]+  Stopped(SIGTSTP)        git config --list
+sh-4.4$ git config --global user.email "bolludineshkumar@highwirepress.com"
+sh-4.4$ git config --global user.name "Dinesh-mps"
+sh-4.4$ git log
+commit e50912acd5252f6567956d11532f4bfaa1758c83 (HEAD -> JCOREX-7525, origin/JCOREX-7525)
+Author: gnaikmps <gunjan.naik@bizbrolly.com>
+Date:   Tue Mar 11 09:32:54 2025 -0400
+
+    css fix
+
+commit 81a9e271305226a3bdc6a60723bd6f090fa175b1 (origin/JCOREX-FREEBIRD-752)
+Author: gnaikmps <gunjan.naik@bizbrolly.com>
+Date:   Tue Mar 11 07:17:57 2025 -0400
+
+[2]+  Stopped(SIGTSTP)        git log
+sh-4.4$ git config --list
+user.email=bolludineshkumar@highwirepress.com
+user.name=Dinesh-mps
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=git@github.com:highwire/freebird.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.8.x-1.x-stable.remote=origin
+branch.8.x-1.x-stable.merge=refs/heads/8.x-1.x-stable
+remote.composer.url=git@github.com:highwire/freebird.git
+remote.composer.fetch=+refs/heads/*:refs/remotes/composer/*
+branch.10.x-1.x-stable.remote=origin
+branch.10.x-1.x-stable.merge=refs/heads/10.x-1.x-stable
+(END)

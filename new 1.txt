@@ -1,0 +1,64 @@
+create mode 100644 config/sync/core.entity_form_display.node.eletters.default.yml
+ create mode 100644 config/sync/core.entity_form_display.paragraph.contributors.default.yml
+ create mode 100644 config/sync/core.entity_view_display.node.eletters.default.yml
+ create mode 100644 config/sync/core.entity_view_display.node.eletters.teaser.yml
+ create mode 100644 config/sync/core.entity_view_display.node.eletters.toc_list.yml
+ create mode 100644 config/sync/core.entity_view_display.paragraph.contributors.default.yml
+ create mode 100644 config/sync/core.entity_view_mode.paragraph.preview.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_attachments.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_contributors.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_corpus_info.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_electronic_publication.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_electronic_publication_dat.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_highwire_comment_response.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_highwire_comment_subject.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_highwire_comment_subject_a.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_no_competing_interests.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_please_describe_the_compet.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_print_publication_date.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_references.yml
+ create mode 100644 config/sync/field.field.node.eletters.field_workflow_state.yml
+ create mode 100644 config/sync/field.field.paragraph.contributors.field_address.yml
+ create mode 100644 config/sync/field.field.paragraph.contributors.field_affiliation.yml
+ create mode 100644 config/sync/field.field.paragraph.contributors.field_degrees.yml
+ create mode 100644 config/sync/field.field.paragraph.contributors.field_email_address.yml
+ create mode 100644 config/sync/field.field.paragraph.contributors.field_first_name_middle_initial.yml
+ create mode 100644 config/sync/field.field.paragraph.contributors.field_last_name.yml
+ create mode 100644 config/sync/field.field.paragraph.contributors.field_occupation.yml
+ create mode 100644 config/sync/field.storage.node.field_attachments.yml
+ create mode 100644 config/sync/field.storage.node.field_contributors.yml
+ create mode 100644 config/sync/field.storage.node.field_corpus_info.yml
+ create mode 100644 config/sync/field.storage.node.field_electronic_publication.yml
+ create mode 100644 config/sync/field.storage.node.field_electronic_publication_dat.yml
+ create mode 100644 config/sync/field.storage.node.field_highwire_comment_response.yml
+ create mode 100644 config/sync/field.storage.node.field_highwire_comment_subject.yml
+ create mode 100644 config/sync/field.storage.node.field_highwire_comment_subject_a.yml
+ create mode 100644 config/sync/field.storage.node.field_no_competing_interests.yml
+ create mode 100644 config/sync/field.storage.node.field_please_describe_the_compet.yml
+ create mode 100644 config/sync/field.storage.node.field_print_publication_date.yml
+ create mode 100644 config/sync/field.storage.node.field_references.yml
+ create mode 100644 config/sync/field.storage.node.field_workflow_state.yml
+ create mode 100644 config/sync/field.storage.paragraph.field_address.yml
+ create mode 100644 config/sync/field.storage.paragraph.field_affiliation.yml
+ create mode 100644 config/sync/field.storage.paragraph.field_degrees.yml
+ create mode 100644 config/sync/field.storage.paragraph.field_email_address.yml
+ create mode 100644 config/sync/field.storage.paragraph.field_first_name_middle_initial.yml
+ create mode 100644 config/sync/field.storage.paragraph.field_last_name.yml
+ create mode 100644 config/sync/field.storage.paragraph.field_occupation.yml
+ create mode 100644 config/sync/highwire_eletter.settings.yml
+ create mode 100644 config/sync/paragraphs.paragraphs_type.contributors.yml
+ create mode 100644 config/sync/paragraphs.settings.yml
+ create mode 100644 config/sync/views.view.eletters.yml
+ create mode 100644 config/sync/views.view.eletters_moderation.yml
+sh-4.4$ git status
+On branch jocex-869
+nothing to commit, working tree clean
+sh-4.4$ git log
+commit 97c584c71940aaf2176da15257b410eb9e163805 (HEAD -> jocex-869)
+Author: Dinesh-mps <bolludineshkumar@highwirepress.com>
+Date:   Fri Mar 28 10:15:05 2025 -0400
+
+    article page configs for nsj
+
+commit b7bf8c2b8add007aeffeaa6db77e1f4096639ef4 (10.x-1.x-dev)
+Author: charanjeet <charanjeet.singh@highwirepress.com>

@@ -1,0 +1,49 @@
+********************** auto-drupal-prod-web112.highwire.org *****************
+Device: hw-qnap05.highwire.org:/auto_drupal_dev Mountpoint: /auto_drupal_dev Server:auto-drupal-prod-web112.highwire.org
+Device: sassnfs02.highwire.org:/its-nfs02/drupal-prod-files Mountpoint: /drupal-prod-files Server:auto-drupal-prod-web112.highwire.org
+************************************************
+********************** auto-drupal-prod-web113.highwire.org *****************
+Device: hw-qnap05.highwire.org:/auto_drupal_dev Mountpoint: /auto_drupal_dev Server:auto-drupal-prod-web113.highwire.org
+Device: sassnfs02.highwire.org:/its-nfs02/drupal-prod-files Mountpoint: /drupal-prod-files Server:auto-drupal-prod-web113.highwire.org
+************************************************
+********************** auto-drupal-prod-web114.highwire.org *****************
+Device: hw-qnap05.highwire.org:/auto_drupal_dev Mountpoint: /auto_drupal_dev Server:auto-drupal-prod-web114.highwire.org
+Device: sassnfs02.highwire.org:/its-nfs02/drupal-prod-files Mountpoint: /drupal-prod-files Server:auto-drupal-prod-web114.highwire.org
+************************************************
+********************** auto-drupal-prod-web115.highwire.org *****************
+Device: hw-qnap05.highwire.org:/auto_drupal_dev Mountpoint: /auto_drupal_dev Server:auto-drupal-prod-web115.highwire.org
+Device: sassnfs02.highwire.org:/its-nfs02/drupal-prod-files Mountpoint: /drupal-prod-files Server:auto-drupal-prod-web115.highwire.org
+************************************************
+********************** drupal-prod-web01.highwire.org *****************
+Err
+************************************************
+********************** wa-server-prod-collection-1.highwire.org *****************
+Err
+************************************************
+********************** fa-ecommerce-swarm-prod-01.highwire.org *****************
+************************************************
+********************** fa-ecommerce-swarm-prod-02.highwire.org *****************
+************************************************
+********************** fa-ecommerce-swarm-prod-03.highwire.org *****************
+************************************************
+********************** fa-ecommerce-swarm-prod-04.highwire.org *****************
+************************************************
+********************** fa-ecommerce-swarm-prod-05.highwire.org *****************
+************************************************
+********************** fa-ecommerce-swarm-prod-06.highwire.org *****************
+************************************************
+********************** fa-ecommerce-swarm-prod-07.highwire.org *****************
+************************************************
+********************** fr-devops-svc-prod-01.highwire.org *****************
+Device: hw-qnap05.highwire.org:/auto_drupal_dev Mountpoint: /auto_drupal_dev Server:fr-devops-svc-prod-01.highwire.org
+Device: sassnfs02.highwire.org:/its-nfs02/drupal-prod-files Mountpoint: /drupal-prod-files Server:fr-devops-svc-prod-01.highwire.org
+************************************************
+********************** haproxy-varnish1 *****************
+Err
+************************************************
+********************** haproxy-varnish2 *****************
+Err
+************************************************
+********************** haproxy-varnish3 *****************
+Err
+************************************************

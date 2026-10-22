@@ -1,0 +1,6 @@
+JAAPL issues:
+
+1. section data
+2. cited By
+3. Article version
+4. citation alerts dropdown list as pages.
